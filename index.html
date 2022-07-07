@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>STREAM</title>
+        <meta name="author" content="fadilxcoder" />
+        <meta name="copyright" content="fadilxcoder" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
+        <link rel="stylesheet" href="./assets/jquery.mobile-1.4.5.min.css">
+        <link rel="stylesheet" href="./assets/jquery.mobile-style.css">
+        <script src="./assets/jquery.mobile-1.12.4-jquery.min.js"></script>
+        <script src="./assets/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+        <div data-role="page" id="home-page" data-theme="a">
+            <header data-role="header" role="banner">
+                <picture>
+                    <img src="./assets/images/image.gif" style="max-height:200px !important;" alt="Banner Image" />
+                </picture>
+            </header>
+            <div data-role="content">
+                <ul data-role="listview" data-inset="true" id="ListContainer"></ul>
+            </div>
+        </div>
+        
+        <div data-role="page" id="popup">
+            <div data-role="header" data-theme="a">
+                <h1></h1>
+            </div>
+            <div role="main" class="ui-content">
+                <h2></h2>
+                <iframe src="" style="width: 100%;" frameborder="0"></iframe>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){ 
+                $.ajax({
+                    dataType : 'json',
+                    url      : 'https://my-json-server.typicode.com/fadilxcoder/web-crawler/person-of-interest-season-1',
+                    cache    : true,
+                    type     : 'GET',
+                    success  : function (data){
+						showData(data);
+						console.log('200 OK');
+                    },
+                    error   : function(e){
+                        alert(e)
+                    },
+                    fail    : function (){ 
+                        console.log("Request Fail");
+                    }
+                });
+
+                $(document).on('click', 'li.click-to-pop-up', function(){   
+                    var title = $(this).children('a').attr('data-title');
+                    var url = $(this).children('a').attr('data-url');
+
+                    $('#popup div.ui-content h2').text(title);
+                    $('#popup div.ui-content iframe').attr("src", url);
+
+                });
+
+                function showData(data){
+                    var table = '';
+					$.each(data, function (idx, obj) 
+					{                                   
+						table += ('<li class="click-to-pop-up"><a href="#popup" data-rel="dialog" data-transition="flip" data-url="'+ obj +'" data-title="'+ idx +'" >' + idx + '</a></li>');
+					});
+                    $("#ListContainer").append(table);
+                    $("#ListContainer li").addClass('ui-first-child ui-last-child');
+                    $("#ListContainer li a").addClass('ui-btn ui-btn-icon-right ui-icon-carat-r');
+                }
+            });
+        </script>
+    </body>
+</html>
